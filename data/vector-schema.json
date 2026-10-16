@@ -1,0 +1,14 @@
+{
+  "_comment": "Skema metadata absolut yang disuntikkan AI ke setiap chunk saat upsert ke Pinecone",
+  "metadata_schema": {
+    "document_id": "string (Contoh: UU-20-2008-UMKM)",
+    "title": "string (Contoh: UU No. 20 Tahun 2008 tentang Usaha Mikro, Kecil, dan Menengah)",
+    "pasal": "string (Contoh: Pasal 6 Ayat 1 - Kriteria Usaha)",
+    "category": "string (Contoh: PERIZINAN | PAJAK | KETENAGAKERJAAN | HALAL | BPOM)",
+    "chunk_index": "number",
+    "content_raw": "string (Teks asli pasal tanpa modifikasi, maks 1000 karakter, dirender di UI Knowledge Audit)",
+    "status": "string ('ACTIVE' atau 'REVOKED')",
+    "source_url": "string (Tautan ke referensi API atau dokumen asli)",
+    "last_updated": "timestamp"
+  }
+}

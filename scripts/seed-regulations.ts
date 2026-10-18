@@ -43,26 +43,43 @@ yang menerima atau memperoleh penghasilan dengan peredaran bruto tidak melebihi 
 a. Wajib Pajak memilih untuk dikenai Pajak Penghasilan berdasarkan:
 1. tarif Pasal 17 ayat (1) huruf a Undang-Undang Pajak Penghasilan, untuk Wajib Pajak orang pribadi; atau
 2. tarif Pasal 17 ayat (1) huruf b Undang-Undang Pajak Penghasilan dengan mempertimbangkan Pasal 31E Undang-Undang Pajak Penghasilan, untuk Wajib Pajak badan;
-b. Wajib Pajak badan berbentuk persekutuan komanditer atau firma yang dibentuk oleh beberapa Wajib Pajak orang pribadi yang memiliki keahlian khusus menyerahkan jasa sejenis dengan jasa sehubungan dengan pekerjaan bebas sebagaimana dimaksud dalam Pasal 56 ayat (4);
+b. Wajib Pajak badan berbentuk persekutuan komanditer atau firma yang dibentuk oleh beberapa Wajib Pajak orang pribadi yang memiliki keahlian khusus yang menyerahkan jasa yang sejenis dengan jasa sehubungan dengan pekerjaan bebas sebagaimana dimaksud dalam Pasal 56 ayat (4);
 c. Wajib Pajak badan yang memperoleh fasilitas Pajak Penghasilan berdasarkan:
 1. Pasal 31A Undang-Undang Pajak Penghasilan;
-2. Peraturan Pemerintah Nomor 94 Tahun 2010 tentang Penghitungan Penghasilan Kena Pajak dan Pelunasan Pajak Penghasilan dalam Tahun Berjalan beserta perubahan atau penggantinya; atau
-3. Pasal 75 dan Pasal 78 Peraturan Pemerintah Nomor 40 Tahun 2021 tentang Penyelenggaraan Kawasan Ekonomi Khusus beserta perubahan atau penggantinya; dan
+2. Peraturan Pemerintah mengenai fasilitas penanaman modal di bidang usaha tertentu dan/atau di daerah tertentu serta pengurangannya; atau
+3. ketentuan yang mengatur mengenai kawasan ekonomi khusus; dan
 d. Wajib Pajak bentuk usaha tetap.
+(3) Wajib Pajak sebagaimana dimaksud pada ayat (2) huruf a wajib menyampaikan pemberitahuan kepada Direktur Jenderal Pajak.
+(4) Wajib Pajak sebagaimana dimaksud pada ayat (3) untuk Tahun Pajak-Tahun Pajak berikutnya tidak dapat dikenai Pajak Penghasilan yang bersifat final sebagaimana dimaksud dalam Pasal 56 ayat (1).
+(5) Ketentuan lebih lanjut mengenai tata cara penyampaian pemberitahuan sebagaimana dimaksud pada ayat (3) dan kriteria Wajib Pajak badan yang dapat dikenai Pajak Penghasilan yang bersifat final sebagaimana dimaksud pada ayat (1) huruf b diatur dengan Peraturan Menteri.
+
+Pasal 58
+(1) Besarnya peredaran bruto tertentu sebagaimana dimaksud dalam Pasal 57 ayat (1) merupakan jumlah peredaran bruto dalam 1 (satu) Tahun Pajak dari Tahun Pajak terakhir sebelum Tahun Pajak bersangkutan, yang ditentukan berdasarkan keseluruhan peredaran bruto dari usaha, termasuk peredaran bruto dari cabang.
+(2) Dalam hal Wajib Pajak orang pribadi merupakan suami-istri yang menghendaki perjanjian pemisahan harta dan penghasilan secara tertulis atau istri yang memilih menjalankan hak dan kewajiban perpajakannya sendiri, besarnya peredaran bruto tertentu sebagaimana dimaksud pada ayat (1) ditentukan berdasarkan penggabungan peredaran bruto dari usaha suami dan peredaran bruto dari usaha istri.
 
 Pasal 59
 (1) Jangka waktu tertentu pengenaan Pajak Penghasilan yang bersifat final sebagaimana dimaksud dalam Pasal 56 ayat (1) yaitu paling lama:
 a. 7 (tujuh) Tahun Pajak bagi Wajib Pajak orang pribadi;
-b. 4 (empat) Tahun Pajak bagi Wajib Pajak badan berbentuk koperasi, persekutuan komanditer, firma, atau badan usaha milik desa/badan usaha milik desa bersama; dan
+b. 4 (empat) Tahun Pajak bagi Wajib Pajak badan berbentuk koperasi, persekutuan komanditer, firma, badan usaha milik desa/badan usaha milik desa bersama, atau perseroan perorangan yang didirikan oleh 1 (satu) orang; dan
 c. 3 (tiga) Tahun Pajak bagi Wajib Pajak badan berbentuk perseroan terbatas.
 (2) Jangka waktu sebagaimana dimaksud pada ayat (1) terhitung sejak:
 a. Tahun Pajak Wajib Pajak terdaftar, bagi Wajib Pajak yang terdaftar sejak berlakunya Peraturan Pemerintah ini; atau
 b. Tahun Pajak berlakunya Peraturan Pemerintah ini, bagi Wajib Pajak yang telah terdaftar sebelum berlakunya Peraturan Pemerintah ini.
 
 Pasal 60
-(1) Pajak Penghasilan terutang sebagaimana dimaksud dalam Pasal 56 ayat (1) dihitung berdasarkan tarif sebagaimana dimaksud dalam Pasal 56 ayat (2) dikalikan dengan dasar pengenaan pajak.
-(2) Tidak termasuk bagian peredaran bruto dari usaha sebagaimana dimaksud pada ayat (1) sampai dengan Rp500.000.000,00 (lima ratus juta rupiah) dalam 1 (satu) Tahun Pajak bagi Wajib Pajak orang pribadi yang memiliki peredaran bruto tertentu sebagaimana dimaksud dalam Pasal 57 ayat (1) huruf a.
-(3) Bagian peredaran bruto dari usaha sebagaimana dimaksud pada ayat (2) dihitung secara kumulatif sejak Masa Pajak pertama dalam suatu Tahun Pajak atau Bagian Tahun Pajak.
+(1) Jumlah peredaran bruto atas penghasilan dari usaha sebagaimana dimaksud dalam Pasal 56 ayat (1) setiap bulan merupakan dasar pengenaan pajak yang digunakan untuk menghitung Pajak Penghasilan yang bersifat final.
+(2) Wajib Pajak orang pribadi yang memiliki peredaran bruto tertentu sebagaimana dimaksud dalam Pasal 57 ayat (1) huruf a, atas bagian peredaran bruto dari usaha sampai dengan Rp500.000.000,00 (lima ratus juta rupiah) dalam 1 (satu) Tahun Pajak tidak dikenai Pajak Penghasilan.
+(3) Bagian peredaran bruto dari usaha tidak dikenai Pajak Penghasilan sebagaimana dimaksud pada ayat (2) merupakan jumlah peredaran bruto dari usaha yang dihitung secara kumulatif sejak Masa Pajak pertama dalam suatu Tahun Pajak atau Bagian Tahun Pajak.
+(4) Peredaran bruto yang dijadikan dasar pengenaan pajak sebagaimana dimaksud pada ayat (1) dan jumlah peredaran bruto dari usaha yang dihitung secara kumulatif sebagaimana dimaksud pada ayat (3) merupakan imbalan atau nilai pengganti berupa uang atau nilai uang yang diterima atau diperoleh dari usaha, sebelum dikurangi potongan penjualan, potongan tunai, dan/atau potongan sejenis.
+(5) Dasar pengenaan pajak sebagaimana dimaksud pada ayat (1):
+a. untuk Wajib Pajak badan dihitung berdasarkan jumlah peredaran bruto dari usaha setiap bulan; atau
+b. untuk Wajib Pajak orang pribadi dihitung berdasarkan jumlah peredaran bruto dari usaha setiap bulan setelah memperhitungkan bagian peredaran bruto dari usaha sampai dengan Rp500.000.000,00 (lima ratus juta rupiah) dalam 1 (satu) Tahun Pajak yang tidak dikenai Pajak Penghasilan sebagaimana dimaksud pada ayat (2).
+
+Pasal 61
+(1) Wajib Pajak sebagaimana dimaksud dalam Pasal 57 ayat (1) yang peredaran brutonya pada Tahun Pajak berjalan telah melebihi Rp4.800.000.000,00 (empat miliar delapan ratus juta rupiah), atas penghasilan dari usaha tetap dikenai tarif Pajak Penghasilan sebagaimana dimaksud dalam Pasal 56 ayat (2) sampai dengan akhir Tahun Pajak bersangkutan.
+(2) Atas penghasilan dari usaha sebagaimana dimaksud dalam Pasal 56 ayat (1) yang diterima atau diperoleh pada Tahun Pajak-Tahun Pajak berikutnya oleh Wajib Pajak sebagaimana dimaksud pada ayat (1) dikenai Pajak Penghasilan berdasarkan:
+a. tarif Pasal 17 ayat (1) huruf a Undang-Undang Pajak Penghasilan, untuk Wajib Pajak orang pribadi; atau
+b. tarif Pasal 17 ayat (1) huruf b Undang-Undang Pajak Penghasilan dengan mempertimbangkan Pasal 31E Undang-Undang Pajak Penghasilan, untuk Wajib Pajak badan.
 `
   },
   {
@@ -78,12 +95,16 @@ Pasal 35
 a. Usaha Mikro memiliki modal usaha sampai dengan paling banyak Rp1.000.000.000,00 (satu miliar rupiah) tidak termasuk tanah dan bangunan tempat usaha;
 b. Usaha Kecil memiliki modal usaha lebih dari Rp1.000.000.000,00 (satu miliar rupiah) sampai dengan paling banyak Rp5.000.000.000,00 (lima miliar rupiah) tidak termasuk tanah dan bangunan tempat usaha; dan
 c. Usaha Menengah memiliki modal usaha lebih dari Rp5.000.000.000,00 (lima miliar rupiah) sampai dengan paling banyak Rp10.000.000.000,00 (sepuluh miliar rupiah) tidak termasuk tanah dan bangunan tempat usaha.
-
-Pasal 36
-(1) Kriteria hasil penjualan tahunan sebagaimana dimaksud dalam Pasal 35 ayat (1) terdiri atas:
+(4) Selain kriteria modal usaha sebagaimana dimaksud pada ayat (3), untuk kepentingan tertentu dapat digunakan kriteria hasil penjualan tahunan.
+(5) Kriteria hasil penjualan tahunan sebagaimana dimaksud pada ayat (4) terdiri atas:
 a. Usaha Mikro memiliki hasil penjualan tahunan sampai dengan paling banyak Rp2.000.000.000,00 (dua miliar rupiah);
 b. Usaha Kecil memiliki hasil penjualan tahunan lebih dari Rp2.000.000.000,00 (dua miliar rupiah) sampai dengan paling banyak Rp15.000.000.000,00 (lima belas miliar rupiah); dan
 c. Usaha Menengah memiliki hasil penjualan tahunan lebih dari Rp15.000.000.000,00 (lima belas miliar rupiah) sampai dengan paling banyak Rp50.000.000.000,00 (lima puluh miliar rupiah).
+(6) Nilai nominal kriteria modal usaha dan hasil penjualan tahunan sebagaimana dimaksud pada ayat (3) dan ayat (5) dapat diubah sesuai dengan perkembangan perekonomian.
+
+Pasal 36
+(1) Untuk kepentingan tertentu, selain kriteria modal usaha dan hasil penjualan tahunan sebagaimana dimaksud dalam Pasal 35 ayat (1), kementerian/lembaga dapat menggunakan kriteria omzet, kekayaan bersih, nilai investasi, jumlah tenaga kerja, insentif dan disinsentif, kandungan lokal, dan/atau penerapan teknologi ramah lingkungan sesuai dengan kriteria setiap sektor usaha.
+(2) Penggunaan kriteria sebagaimana dimaksud pada ayat (1) oleh menteri teknis atau pimpinan lembaga harus mendapatkan pertimbangan dari Menteri.
 
 Pasal 42
 (1) Perizinan Berusaha bagi Usaha Mikro dan Kecil diberikan melalui Perizinan Tunggal.

@@ -17,15 +17,15 @@ export function splitLegalDocument(
   text: string,
   options: SplitLegalDocOptions = {}
 ): LegalChunk[] {
-  const maxChunkChars = options.maxChunkChars || 1000;
+  const maxChunkChars = options.maxChunkChars || 3000;
   const chunks: LegalChunk[] = [];
 
   // Normalize line endings
   const normalizedText = text.replace(/\r\n/g, "\n");
 
-  // Split by "Pasal <number>" pattern
-  // Regex matches positive lookahead of "Pasal <digits>"
-  const articleRegex = /(?=\bPasal\s+\d+\b)/gi;
+  // Split by "Pasal <number><letter>" pattern ONLY at line beginnings or start of document
+  // Avoids matching cross-references in the middle of sentences (e.g. "sebagaimana dimaksud dalam Pasal 56")
+  const articleRegex = /(?=(?:^|\n)\s*Pasal\s+\d+[A-Za-z]?\b)/gi;
   const rawSections = normalizedText.split(articleRegex);
 
   let chunkCounter = 0;
@@ -34,8 +34,8 @@ export function splitLegalDocument(
     const trimmed = section.trim();
     if (!trimmed) continue;
 
-    // Detect Pasal name from first line
-    const matchPasal = trimmed.match(/^Pasal\s+\d+/i);
+    // Detect Pasal name from first line (e.g. "Pasal 56", "Pasal 43A")
+    const matchPasal = trimmed.match(/^Pasal\s+\d+[A-Za-z]?/i);
     const pasalName = matchPasal ? matchPasal[0] : "Ketentuan Umum";
 
     // If section fits within max chunk limit, keep intact

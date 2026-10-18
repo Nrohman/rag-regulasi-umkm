@@ -26,7 +26,7 @@ export async function ingestLegalDocument(
 ): Promise<IngestionResult> {
   try {
     const index = getPineconeIndex();
-    const chunks = splitLegalDocument(doc.raw_text, { maxChunkChars: 900 });
+    const chunks = splitLegalDocument(doc.raw_text, { maxChunkChars: 3000 });
 
     if (chunks.length === 0) {
       throw new Error(`Dokumen ${doc.document_id} tidak menghasilkan chunk yang valid.`);

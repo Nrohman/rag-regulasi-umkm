@@ -10,6 +10,16 @@ export interface LegalDocumentInput {
   raw_text: string;
 }
 
+export interface LegalGranularChunk {
+  chunk_id: string;
+  document_id: string;
+  title: string;
+  pasal: string;
+  category: "PERIZINAN" | "PAJAK" | "KRITERIA_UMKM" | "HALAL" | "BPOM" | "KETENAGAKERJAAN";
+  source_url: string;
+  content_raw: string;
+}
+
 export interface IngestionResult {
   document_id: string;
   title: string;
@@ -80,5 +90,51 @@ export async function ingestLegalDocument(
       status: "FAILED",
       error: error.message || "Unknown ingestion error",
     };
+  }
+}
+
+/**
+ * Ingests pre-curated, highly-granular legal chunks (Article & Ayat specific)
+ * for 100% deterministic retrieval accuracy without chunking ambiguities.
+ */
+export async function ingestCuratedChunks(
+  chunks: LegalGranularChunk[]
+): Promise<{ status: "SUCCESS" | "FAILED"; total: number; error?: string }> {
+  try {
+    const index = getPineconeIndex();
+    const vectorsToUpsert = [];
+
+    for (let i = 0; i < chunks.length; i++) {
+      const c = chunks[i];
+      // Generate embedding with clean contextual anchor
+      const embeddingText = `${c.title} - ${c.pasal}:\n${c.content_raw}`;
+      const embedding = await generateEmbedding(embeddingText);
+
+      vectorsToUpsert.push({
+        id: c.chunk_id,
+        values: embedding,
+        metadata: {
+          document_id: c.document_id,
+          title: c.title,
+          pasal: c.pasal,
+          category: c.category,
+          chunk_index: i,
+          content_raw: c.content_raw,
+          status: "ACTIVE",
+          source_url: c.source_url,
+          last_updated: new Date().toISOString(),
+        },
+      });
+    }
+
+    const batchSize = 50;
+    for (let i = 0; i < vectorsToUpsert.length; i += batchSize) {
+      const batch = vectorsToUpsert.slice(i, i + batchSize);
+      await index.upsert(batch);
+    }
+
+    return { status: "SUCCESS", total: vectorsToUpsert.length };
+  } catch (error: any) {
+    return { status: "FAILED", total: 0, error: error.message || "Unknown ingestion error" };
   }
 }

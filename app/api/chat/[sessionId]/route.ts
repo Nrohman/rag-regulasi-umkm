@@ -1,40 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
-import { retrieveLegalContext, RetrievedLegalChunk } from "@/lib/rag/retriever";
-
-export const dynamic = "force-dynamic";
-
-interface RouteParams {
-  params: {
-    sessionId: string;
-  };
-}
+import { retrieveLegalContext } from "@/lib/rag/retriever";
 
 export async function POST(
   req: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { sessionId: string } }
 ) {
   try {
     const { sessionId } = params;
     const body = await req.json();
-    const userMessage = body?.message?.trim();
+    const userMessage = body.message;
 
-    if (!userMessage) {
+    if (!userMessage || typeof userMessage !== "string") {
       return NextResponse.json(
         { error: "Pesan tidak boleh kosong" },
         { status: 400 }
       );
     }
 
-    const apiKey = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GOOGLE_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "API Key Google Gemini belum dikonfigurasi di server" },
+        { error: "GOOGLE_API_KEY belum dikonfigurasi di lingkungan server" },
         { status: 500 }
       );
     }
 
-    // 1. Simpan pesan pengguna ke Database Supabase
+    // 1. Simpan pesan pengguna ke database PostgreSQL Supabase
     await prisma.message.create({
       data: {
         sessionId,
@@ -51,17 +43,21 @@ export async function POST(
     });
     const history = recentMessages.reverse();
 
-    // 3. Tarik konteks hukum dari Pinecone (Strict RAG: status ACTIVE)
+    // 3. Tarik konteks hukum dari Pinecone (Strict RAG: status ACTIVE + adaptive thresholding)
     const retrieval = await retrieveLegalContext(userMessage, 3);
 
-    // 4. Susun System Prompt Konsultan Hukum Ramah
+    // 4. Susun System Prompt Konsultan Hukum Ramah & Berintegritas
     const systemPrompt = `Anda adalah "UMKM Law AI Assistant", asisten hukum & perizinan resmi yang ramah, empatik, dan solutif bagi pelaku Usaha Mikro, Kecil, dan Menengah (UMKM) di Indonesia.
 
 PANDUAN UTAMA:
-1. Integritas Fakta Hukum (Strict RAG): Jawab pertanyaan pengguna HANYA berdasarkan konteks dokumen hukum resmi yang dilampirkan di bawah. JANGAN mengarang pasal, angka omzet, atau syarat izin fiktif.
-2. Penomoran Sitasi: Setiap kali Anda menyampaikan klaim hukum (syarat, batas omzet, tarif pajak, nama perizinan), CANTUMKAN sitasi langsung dengan format [Ref 1], [Ref 2], dsb. yang bersesuaian tepat setelah kalimat tersebut.
-3. Gaya Bahasa: Gunakan Bahasa Indonesia yang hangat, komunikatif, dan mudah dipahami orang awam. Hindari bahasa birokrasi berbelit-belit. Gunakan format Markdown (bold, bullet list, atau tabel jika ada klasifikasi).
-4. Di luar Konteks: Jika pertanyaan tidak ada dalam konteks hukum yang dilampirkan, katakan dengan sopan bahwa Anda saat ini fokus pada regulasi UMKM inti (OSS-RBA PP 5/2021, Kriteria UMKM PP 7/2021, Pajak UMKM PP 55/2022, dan Sertifikasi Halal UMK) dan sarankan berkonsultasi ke dinas perizinan terkait.
+1. Integritas Fakta Hukum (Strict RAG): Jawab pertanyaan pengguna HANYA berdasarkan naskah peraturan resmi yang dilampirkan dalam KONTEKS di bawah. DILARANG KERAS mengarang pasal, ayat, angka batas omzet/biaya, atau kriteria fiktif.
+2. Penomoran Sitasi: Setiap menyampaikan klaim hukum (syarat, batas omzet, tarif pajak, nama perizinan), CANTUMKAN sitasi langsung dengan format [Ref 1], [Ref 2], dsb. TEPAT setelah kalimat tersebut. Sebutkan secara spesifik nomor pasal dan ayatnya (misalnya: "Berdasarkan Pasal 60 ayat (2) [Ref 1]").
+3. HANYA cantumkan sitasi [Ref X] yang benar-benar relevan dan Anda gunakan dalam jawaban. Jangan mengutip referensi yang tidak berhubungan dengan topik pertanyaan pengguna.
+4. Format Jawaban:
+   - Berikan kesimpulan langsung yang jelas dan menenangkan bagi pelaku usaha di awal (misal: "Anda TIDAK WAJIB membayar PPh Final (Pajak = Rp 0 / Nihil)").
+   - Paparkan dasar hukum dan perhitungan konkretnya (bila ada hitungan angka).
+   - Gunakan format Markdown yang rapi (bullet points, bold).
+5. Di luar Konteks: Jika pertanyaan pengguna di luar cakupan regulasi UMKM, sampaikan dengan sopan bahwa Anda berfokus pada regulasi bisnis UMKM dan sarankan instansi terkait.
 
 KONTEKS REGULASI HUKUM RESMI:
 ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
@@ -70,7 +66,7 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
     const contents: any[] = [];
     
     // Masukkan riwayat obrolan terdahulu
-    history.slice(0, -1).forEach((msg) => {
+    history.slice(0, -1).forEach((msg: any) => {
       contents.push({
         role: msg.role === "assistant" ? "model" : "user",
         parts: [{ text: msg.content }],
@@ -87,13 +83,20 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
       ],
     });
 
-    // 6. Panggil Gemini Streaming API via SSE
+    // 6. Panggil Gemini Streaming API via SSE dengan konfigurasi deterministik cepat
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${apiKey}`;
 
     const geminiResponse = await fetch(geminiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents }),
+      body: JSON.stringify({
+        contents,
+        generationConfig: {
+          temperature: 0.1,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        },
+      }),
     });
 
     if (!geminiResponse.ok) {
@@ -110,10 +113,11 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
     // 7. Buat ReadableStream kustom untuk frontend
     const stream = new ReadableStream({
       async start(controller) {
-        // Kirim metadata sitasi hukum terlebih dahulu
+        // Kirim metadata sitasi awal
+        const initialCitations = retrieval.citations.map((c, i) => ({ ...c, refIndex: i + 1 }));
         const citationsPayload = JSON.stringify({
           type: "citations",
-          citations: retrieval.citations,
+          citations: initialCitations,
         });
         controller.enqueue(encoder.encode(`data: ${citationsPayload}\n\n`));
 
@@ -151,6 +155,50 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
               }
             }
           }
+
+          // Filter sitasi: Ambil HANYA sitasi yang benar-benar dirujuk oleh asisten dalam jawabannya
+          const citedIndices = new Set<number>();
+          const refRegex = /\[Ref\s*(\d+)[^\]]*\]/gi;
+          let match: RegExpExecArray | null;
+          while ((match = refRegex.exec(fullAssistantResponse)) !== null) {
+            const refNum = parseInt(match[1], 10);
+            if (refNum >= 1 && refNum <= initialCitations.length) {
+              citedIndices.add(refNum);
+            }
+          }
+
+          const activeCitations = citedIndices.size > 0
+            ? initialCitations.filter((c) => citedIndices.has(c.refIndex))
+            : (initialCitations.length > 0 ? [initialCitations[0]] : []);
+
+          // Kirim pembaruan sitasi final yang terverifikasi ke frontend
+          const refinedPayload = JSON.stringify({
+            type: "citations",
+            citations: activeCitations,
+          });
+          controller.enqueue(encoder.encode(`data: ${refinedPayload}\n\n`));
+
+          // Simpan balasan lengkap AI dan Sitasi terverifikasi ke database
+          if (fullAssistantResponse.trim()) {
+            try {
+              await prisma.message.create({
+                data: {
+                  sessionId,
+                  role: "assistant",
+                  content: fullAssistantResponse,
+                  citations: activeCitations as any,
+                },
+              });
+
+              // Update session updatedAt
+              await prisma.session.update({
+                where: { id: sessionId },
+                data: { updatedAt: new Date() },
+              });
+            } catch (dbErr) {
+              console.error("Gagal menyimpan pesan asisten ke Prisma:", dbErr);
+            }
+          }
         } catch (streamErr: any) {
           console.error("Stream reader error:", streamErr);
           const errPayload = JSON.stringify({
@@ -160,42 +208,6 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
           controller.enqueue(encoder.encode(`data: ${errPayload}\n\n`));
         } finally {
           controller.close();
-
-          // 8. Simpan balasan lengkap AI dan Sitasi ke database PostgreSQL Supabase
-          if (fullAssistantResponse.trim()) {
-            try {
-              await prisma.message.create({
-                data: {
-                  sessionId,
-                  role: "assistant",
-                  content: fullAssistantResponse,
-                  citations: retrieval.citations as any,
-                },
-              });
-
-              // Update session updatedAt
-              await prisma.session.update({
-                where: { id: sessionId },
-                data: { updatedAt: new Date() },
-              });
-
-              // Jika sesi masih memiliki judul default, buatkan judul otomatis singkat
-              const sessionData = await prisma.session.findUnique({
-                where: { id: sessionId },
-                include: { _count: { select: { messages: true } } },
-              });
-
-              if (sessionData && sessionData.title === "Percakapan Baru") {
-                const words = userMessage.split(/\s+/).slice(0, 5).join(" ");
-                await prisma.session.update({
-                  where: { id: sessionId },
-                  data: { title: words || "Konsultasi Regulasi" },
-                });
-              }
-            } catch (dbErr) {
-              console.error("Gagal menyimpan pesan AI ke Prisma:", dbErr);
-            }
-          }
         }
       },
     });
@@ -210,7 +222,7 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
   } catch (error: any) {
     console.error("Error in chat route:", error);
     return NextResponse.json(
-      { error: "Terjadi kesalahan internal pada endpoint chat", details: error.message },
+      { error: error.message || "Internal server error" },
       { status: 500 }
     );
   }

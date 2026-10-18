@@ -17,11 +17,12 @@ export interface RetrievalResult {
 }
 
 /**
- * Retrieves legally active chunks from Pinecone strictly filtered by status: ACTIVE.
+ * Retrieves legally active chunks from Pinecone strictly filtered by status: ACTIVE,
+ * with adaptive similarity thresholding to avoid irrelevant cross-domain noise.
  */
 export async function retrieveLegalContext(
   query: string,
-  topK: number = 3
+  topK: number = 5
 ): Promise<RetrievalResult> {
   const index = getPineconeIndex();
 
@@ -38,10 +39,25 @@ export async function retrieveLegalContext(
     includeMetadata: true,
   });
 
+  const rawMatches = (queryResponse.matches || []).filter(
+    (m) => m.metadata && (m.score || 0) >= 0.62
+  );
+
+  if (rawMatches.length === 0) {
+    return { contextText: "", citations: [] };
+  }
+
+  // 3. Adaptive Relevance Thresholding:
+  // Discard chunks that diverge significantly from the top match score (> 0.12 delta)
+  const topScore = rawMatches[0].score || 0;
+  const filteredMatches = rawMatches
+    .filter((m) => topScore - (m.score || 0) <= 0.12)
+    .slice(0, 3);
+
   const citations: RetrievedLegalChunk[] = [];
   const contextParts: string[] = [];
 
-  queryResponse.matches.forEach((match, index) => {
+  filteredMatches.forEach((match, index) => {
     const meta = match.metadata as any;
     if (!meta) return;
 
@@ -57,9 +73,9 @@ export async function retrieveLegalContext(
 
     citations.push(chunkData);
 
-    // Format context with index number [1], [2] for LLM citation grounding
+    // Format context with index number [Ref 1], [Ref 2] for LLM citation grounding
     contextParts.push(
-      `[Ref ${index + 1}] ${chunkData.title} (${chunkData.pasal})\nKategori: ${chunkData.category}\nIsi Teks:\n"${chunkData.content_raw}"\nSumber Resmi: ${chunkData.source_url}`
+      `[Ref ${index + 1}] ${chunkData.title} (${chunkData.pasal})\nKategori: ${chunkData.category}\nIsi Teks Asli:\n"${chunkData.content_raw}"\nSumber Resmi: ${chunkData.source_url}`
     );
   });
 

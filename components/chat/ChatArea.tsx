@@ -179,38 +179,6 @@ export default function ChatArea() {
     }
   };
 
-  /**
-   * Helper to render inline clickable citations [Ref 1], [Ref 2]
-   */
-  const renderMessageContent = (content: string, citations?: CitationItem[] | null) => {
-    // Regex matches [Ref 1], [Ref 2], etc.
-    const parts = content.split(/(\[Ref\s+\d+\])/g);
-
-    return parts.map((part, index) => {
-      const match = part.match(/\[Ref\s+(\d+)\]/);
-      if (match && citations && citations.length > 0) {
-        const refIndex = parseInt(match[1], 10) - 1;
-        const citation = citations[refIndex];
-
-        if (citation) {
-          return (
-            <button
-              key={index}
-              onClick={() => openAuditModal(citation)}
-              className="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 text-[11px] font-semibold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-800/80 rounded border border-blue-300 dark:border-blue-700/50 transition-colors shadow-xs align-baseline"
-              title={`Klik untuk melihat teks asli ${citation.pasal}`}
-            >
-              <Scale className="w-3 h-3 shrink-0" />
-              <span>{part}</span>
-            </button>
-          );
-        }
-      }
-
-      return <React.Fragment key={index}>{part}</React.Fragment>;
-    });
-  };
-
   return (
     <div className="flex-1 flex flex-col h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden">
       {/* Top Header Bar */}
@@ -311,23 +279,62 @@ export default function ChatArea() {
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                   ) : (
                     <div className="prose dark:prose-invert prose-sm max-w-none space-y-2">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {msg.content}
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          a: ({ href, children }) => {
+                            const match = href?.match(/^#ref-(\d+)$/);
+                            if (match && msg.citations && msg.citations.length > 0) {
+                              const refNum = parseInt(match[1], 10);
+                              const citation =
+                                msg.citations.find((c: any) => c.refIndex === refNum) ||
+                                msg.citations[refNum - 1];
+
+                              if (citation) {
+                                return (
+                                  <button
+                                    type="button"
+                                    onClick={() => openAuditModal(citation)}
+                                    className="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 text-[11px] font-semibold text-blue-700 dark:text-blue-300 bg-blue-100/90 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-800 rounded border border-blue-300 dark:border-blue-700/60 transition-all cursor-pointer align-baseline"
+                                    title={`Audit Hukum: ${citation.pasal}`}
+                                  >
+                                    <Scale className="w-3 h-3 text-blue-600 dark:text-blue-400 shrink-0" />
+                                    <span>{children}</span>
+                                  </button>
+                                );
+                              }
+                            }
+
+                            return (
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800"
+                              >
+                                {children}
+                              </a>
+                            );
+                          },
+                        }}
+                      >
+                        {msg.content.replace(/\[Ref\s*(\d+)[^\]]*\]/g, "[$&](#ref-$1)")}
                       </ReactMarkdown>
 
                       {/* Render Citations if available */}
                       {msg.citations && msg.citations.length > 0 && (
                         <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-1.5 items-center">
                           <span className="text-[11px] font-semibold text-slate-400 mr-1 flex items-center gap-1">
-                            <BookOpen className="w-3 h-3" /> Sumber Hukum:
+                            <BookOpen className="w-3 h-3" /> Sumber Hukum Terkait:
                           </span>
-                          {msg.citations.map((c, cIdx) => (
+                          {msg.citations.map((c: any, cIdx: number) => (
                             <button
                               key={cIdx}
                               onClick={() => openAuditModal(c)}
-                              className="px-2 py-0.5 text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/60 rounded border border-slate-200 dark:border-slate-700 transition-colors"
+                              className="px-2 py-0.5 text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/60 rounded border border-slate-200 dark:border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
                             >
-                              [Ref {cIdx + 1}] {c.pasal}
+                              <Scale className="w-3 h-3" />
+                              <span>[Ref {c.refIndex || cIdx + 1}] {c.pasal}</span>
                             </button>
                           ))}
                         </div>

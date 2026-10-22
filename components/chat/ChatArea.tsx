@@ -309,16 +309,19 @@ export default function ChatArea() {
                                 msg.citations[refNum - 1];
 
                               if (citation) {
+                                const targetUrl = citation.source_url || "#";
                                 return (
-                                  <button
-                                    type="button"
-                                    onClick={() => openAuditModal(citation)}
-                                    className="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 text-[11px] font-semibold text-blue-700 dark:text-blue-300 bg-blue-100/90 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-800 rounded border border-blue-300 dark:border-blue-700/60 transition-all cursor-pointer align-baseline"
-                                    title={`Audit Hukum: ${citation.pasal}`}
+                                  <a
+                                    href={targetUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 text-[11px] font-semibold text-blue-700 dark:text-blue-300 bg-blue-100/90 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-800 rounded border border-blue-300 dark:border-blue-700/60 transition-all cursor-pointer align-baseline group"
+                                    title={`Buka Dokumen Resmi Pemerintah (JDIH BPK RI): ${citation.pasal} - ${citation.title}`}
                                   >
                                     <Scale className="w-3 h-3 text-blue-600 dark:text-blue-400 shrink-0" />
                                     <span>{children}</span>
-                                  </button>
+                                    <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                  </a>
                                 );
                               }
                             }
@@ -339,22 +342,59 @@ export default function ChatArea() {
                         {msg.content.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)")}
                       </ReactMarkdown>
 
-                      {/* Render Citations if available */}
+                      {/* Daftar Pustaka / Rujukan Hukum Terverifikasi */}
                       {msg.citations && msg.citations.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-1.5 items-center">
-                          <span className="text-[11px] font-semibold text-slate-400 mr-1 flex items-center gap-1">
-                            <BookOpen className="w-3 h-3" /> Sumber Hukum Terkait:
-                          </span>
-                          {msg.citations.map((c: any, cIdx: number) => (
-                            <button
-                              key={cIdx}
-                              onClick={() => openAuditModal(c)}
-                              className="px-2 py-0.5 text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/60 rounded border border-slate-200 dark:border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
-                            >
-                              <Scale className="w-3 h-3" />
-                              <span>[Ref {c.refIndex || cIdx + 1}] {c.pasal}</span>
-                            </button>
-                          ))}
+                        <div className="mt-4 pt-3.5 border-t border-slate-200/80 dark:border-slate-800 space-y-2">
+                          <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+                            <span className="flex items-center gap-1.5">
+                              <BookOpen className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                              <span>Daftar Rujukan Hukum Terverifikasi:</span>
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-normal">
+                              {msg.citations.length} Dasar Hukum Resmi
+                            </span>
+                          </div>
+
+                          <div className="space-y-1.5">
+                            {msg.citations.map((c: any, cIdx: number) => {
+                              const refNumber = c.refIndex || cIdx + 1;
+                              return (
+                                <div
+                                  key={cIdx}
+                                  className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200/90 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-blue-300 dark:hover:border-blue-700/60 transition-all group"
+                                >
+                                  <div className="space-y-0.5">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                                        [Ref {refNumber}]
+                                      </span>
+                                      <span className="text-xs font-bold text-slate-800 dark:text-slate-100">
+                                        {c.pasal}
+                                      </span>
+                                      <span className="text-[10px] px-1.5 py-0.2 rounded font-medium bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60">
+                                        Status: Aktif
+                                      </span>
+                                    </div>
+                                    <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-1 leading-snug">
+                                      {c.title}
+                                    </p>
+                                  </div>
+
+                                  {c.source_url && (
+                                    <a
+                                      href={c.source_url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/80 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer group-hover:border-blue-300 shadow-xs"
+                                    >
+                                      <span>Buka Dokumen Resmi</span>
+                                      <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                       )}
                     </div>

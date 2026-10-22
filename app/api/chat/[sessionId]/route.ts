@@ -94,7 +94,7 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
         generationConfig: {
           temperature: 0.1,
           topP: 0.95,
-          maxOutputTokens: 1024,
+          maxOutputTokens: 2048,
         },
       }),
     });
@@ -126,18 +126,23 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
           return;
         }
 
+        let buffer = "";
+
         try {
           while (true) {
             const { done, value } = await geminiReader.read();
             if (done) break;
 
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split("\n");
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            // Pertahankan potongan baris terakhir yang belum lengkap di buffer
+            buffer = lines.pop() || "";
 
             for (const line of lines) {
-              if (line.startsWith("data: ")) {
+              const trimmed = line.trim();
+              if (trimmed.startsWith("data: ")) {
                 try {
-                  const json = JSON.parse(line.slice(6));
+                  const json = JSON.parse(trimmed.slice(6));
                   const candidate = json.candidates?.[0];
                   const text = candidate?.content?.parts?.[0]?.text;
 
@@ -154,6 +159,23 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
                 }
               }
             }
+          }
+
+          // Proses baris terakhir jika masih tersisa di buffer
+          if (buffer.trim().startsWith("data: ")) {
+            try {
+              const json = JSON.parse(buffer.trim().slice(6));
+              const candidate = json.candidates?.[0];
+              const text = candidate?.content?.parts?.[0]?.text;
+              if (text) {
+                fullAssistantResponse += text;
+                const tokenPayload = JSON.stringify({
+                  type: "token",
+                  token: text,
+                });
+                controller.enqueue(encoder.encode(`data: ${tokenPayload}\n\n`));
+              }
+            } catch {}
           }
 
           // Filter sitasi: Ambil HANYA sitasi yang benar-benar dirujuk oleh asisten dalam jawabannya

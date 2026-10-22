@@ -138,17 +138,21 @@ export default function ChatArea() {
 
       if (reader) {
         let done = false;
+        let sseBuffer = "";
         while (!done) {
           const { value, done: streamDone } = await reader.read();
           done = streamDone;
           if (value) {
-            const rawChunk = decoder.decode(value, { stream: true });
-            const lines = rawChunk.split("\n\n");
+            sseBuffer += decoder.decode(value, { stream: true });
+            const events = sseBuffer.split("\n\n");
+            // Simpan event terakhir yang mungkin belum utuh
+            sseBuffer = events.pop() || "";
 
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
+            for (const event of events) {
+              const trimmed = event.trim();
+              if (trimmed.startsWith("data: ")) {
                 try {
-                  const data = JSON.parse(line.replace("data: ", ""));
+                  const data = JSON.parse(trimmed.slice(6));
                   if (data.type === "citations") {
                     citationsList = data.citations;
                   } else if (data.type === "token") {
@@ -160,6 +164,18 @@ export default function ChatArea() {
               }
             }
           }
+        }
+
+        // Proses sisa buffer jika ada
+        if (sseBuffer.trim().startsWith("data: ")) {
+          try {
+            const data = JSON.parse(sseBuffer.trim().slice(6));
+            if (data.type === "citations") {
+              citationsList = data.citations;
+            } else if (data.type === "token") {
+              updateStreamingMessage(data.token, citationsList);
+            }
+          } catch {}
         }
       }
     } catch (err: any) {

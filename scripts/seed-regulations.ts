@@ -185,21 +185,6 @@ b. izin edar dan/atau tanda daftar edar makanan sesuai dengan ketentuan peratura
 
   // ==================== PP NO. 5 TAHUN 2021 (OSS RBA) ====================
   {
-    chunk_id: "PP5-2021-PASAL-6",
-    document_id: "PP-5-2021-OSS-RBA",
-    title: "Peraturan Pemerintah No. 5 Tahun 2021 tentang Penyelenggaraan Perizinan Berusaha Berbasis Risiko (OSS RBA)",
-    pasal: "Pasal 6",
-    category: "PERIZINAN",
-    source_url: "https://peraturan.bpk.go.id/Details/161835/pp-no-5-tahun-2021",
-    content_raw: `Pasal 6
-(1) Perizinan Berusaha Berbasis Risiko dilakukan berdasarkan penetapan tingkat Risiko dan peringkat skala usaha kegiatan usaha.
-(2) Tingkat Risiko sebagaimana dimaksud pada ayat (1) meliputi:
-a. tingkat Risiko rendah;
-b. tingkat Risiko menengah rendah;
-c. tingkat Risiko menengah tinggi; atau
-d. tingkat Risiko tinggi.`
-  },
-  {
     chunk_id: "PP5-2021-PASAL-10",
     document_id: "PP-5-2021-OSS-RBA",
     title: "Peraturan Pemerintah No. 5 Tahun 2021 tentang Penyelenggaraan Perizinan Berusaha Berbasis Risiko (OSS RBA)",
@@ -207,9 +192,13 @@ d. tingkat Risiko tinggi.`
     category: "PERIZINAN",
     source_url: "https://peraturan.bpk.go.id/Details/161835/pp-no-5-tahun-2021",
     content_raw: `Pasal 10
-(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko rendah berupa NIB yang merupakan identitas Pelaku Usaha sekaligus legalitas untuk melaksanakan kegiatan berusaha.
-(2) NIB sebagaimana dimaksud pada ayat (1) berlaku sebagai legalitas pelaksanaan kegiatan persiapan, operasional, dan/atau komersial.
-(3) NIB sebagaimana dimaksud pada ayat (1) diterbitkan secara otomatis melalui sistem OSS setelah Pelaku Usaha mengisi data secara lengkap.`
+(1) Berdasarkan penilaian tingkat bahaya, penilaian potensi terjadinya bahaya, tingkat Risiko, dan peringkat skala usaha kegiatan usaha, kegiatan usaha diklasifikasikan menjadi:
+a. kegiatan usaha dengan tingkat Risiko rendah;
+b. kegiatan usaha dengan tingkat Risiko menengah; dan
+c. kegiatan usaha dengan tingkat Risiko tinggi.
+(2) Kegiatan usaha dengan tingkat Risiko menengah sebagaimana dimaksud pada ayat (1) huruf b terbagi atas:
+a. tingkat Risiko menengah rendah; dan
+b. tingkat Risiko menengah tinggi.`
   },
   {
     chunk_id: "PP5-2021-PASAL-12",
@@ -219,8 +208,10 @@ d. tingkat Risiko tinggi.`
     category: "PERIZINAN",
     source_url: "https://peraturan.bpk.go.id/Details/161835/pp-no-5-tahun-2021",
     content_raw: `Pasal 12
-(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko menengah rendah berupa NIB dan Sertifikat Standar.
-(2) Sertifikat Standar sebagaimana dimaksud pada ayat (1) merupakan legalitas untuk melaksanakan kegiatan usaha dalam bentuk pernyataan Pelaku Usaha untuk memenuhi standar usaha dalam rangka melakukan kegiatan usaha yang diterbitkan melalui sistem OSS.`
+(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko rendah sebagaimana dimaksud dalam Pasal 10 ayat (1) huruf a berupa NIB yang merupakan identitas Pelaku Usaha sekaligus legalitas untuk melaksanakan kegiatan usaha.
+(2) NIB sebagaimana dimaksud pada ayat (1) untuk kegiatan usaha dengan tingkat Risiko rendah yang dilakukan oleh UMK, berlaku juga sebagai:
+a. Standar Nasional Indonesia (SNI) sebagaimana dimaksud dalam peraturan perundang-undangan di bidang standardisasi dan penilaian kesesuaian; dan/atau
+b. pernyataan jaminan halal sebagaimana dimaksud dalam peraturan perundang-undangan di bidang jaminan produk halal.`
   },
   {
     chunk_id: "PP5-2021-PASAL-13",
@@ -230,8 +221,10 @@ d. tingkat Risiko tinggi.`
     category: "PERIZINAN",
     source_url: "https://peraturan.bpk.go.id/Details/161835/pp-no-5-tahun-2021",
     content_raw: `Pasal 13
-(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko menengah tinggi berupa NIB dan Sertifikat Standar.
-(2) Sertifikat Standar sebagaimana dimaksud pada ayat (1) merupakan Sertifikat Standar pelaksanaan kegiatan usaha yang diterbitkan Pemerintah Pusat atau Pemerintah Daerah sesuai kewenangannya berdasarkan hasil verifikasi pemenuhan standar pelaksanaan kegiatan usaha oleh Pelaku Usaha.`
+(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko menengah rendah sebagaimana dimaksud dalam Pasal 10 ayat (2) huruf a berupa:
+a. NIB; dan
+b. Sertifikat Standar.
+(2) Sertifikat Standar sebagaimana dimaksud pada ayat (1) huruf b merupakan legalitas untuk melaksanakan kegiatan usaha dalam bentuk pernyataan Pelaku Usaha untuk memenuhi standar usaha dalam rangka melakukan kegiatan usaha yang diberikan melalui Sistem OSS.`
   },
   {
     chunk_id: "PP5-2021-PASAL-14",
@@ -241,8 +234,25 @@ d. tingkat Risiko tinggi.`
     category: "PERIZINAN",
     source_url: "https://peraturan.bpk.go.id/Details/161835/pp-no-5-tahun-2021",
     content_raw: `Pasal 14
-(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko tinggi berupa NIB dan Izin.
-(2) Izin sebagaimana dimaksud pada ayat (1) merupakan persetujuan Pemerintah Pusat atau Pemerintah Daerah untuk pelaksanaan kegiatan usaha yang wajib dipenuhi oleh Pelaku Usaha sebelum melaksanakan kegiatan usaha.`
+(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko menengah tinggi sebagaimana dimaksud dalam Pasal 10 ayat (2) huruf b berupa:
+a. NIB; dan
+b. Sertifikat Standar.
+(2) Sertifikat Standar sebagaimana dimaksud pada ayat (1) huruf b merupakan Sertifikat Standar pelaksanaan kegiatan usaha yang diterbitkan Pemerintah Pusat atau Pemerintah Daerah sesuai kewenangan masing-masing berdasarkan hasil verifikasi pemenuhan standar pelaksanaan kegiatan usaha oleh Pelaku Usaha.
+(3) Sebelum memperoleh Sertifikat Standar sebagaimana dimaksud pada ayat (1) huruf b, Pelaku Usaha menggunakan NIB untuk persiapan pelaksanaan kegiatan usaha.`
+  },
+  {
+    chunk_id: "PP5-2021-PASAL-15",
+    document_id: "PP-5-2021-OSS-RBA",
+    title: "Peraturan Pemerintah No. 5 Tahun 2021 tentang Penyelenggaraan Perizinan Berusaha Berbasis Risiko (OSS RBA)",
+    pasal: "Pasal 15",
+    category: "PERIZINAN",
+    source_url: "https://peraturan.bpk.go.id/Details/161835/pp-no-5-tahun-2021",
+    content_raw: `Pasal 15
+(1) Perizinan Berusaha untuk kegiatan usaha dengan tingkat Risiko tinggi sebagaimana dimaksud dalam Pasal 10 ayat (1) huruf c berupa:
+a. NIB; dan
+b. Izin.
+(2) Izin sebagaimana dimaksud pada ayat (1) huruf b merupakan persetujuan Pemerintah Pusat atau Pemerintah Daerah untuk pelaksanaan kegiatan usaha yang wajib dipenuhi oleh Pelaku Usaha sebelum melaksanakan kegiatan usahanya.
+(3) Sebelum memperoleh Izin sebagaimana dimaksud pada ayat (2), Pelaku Usaha dapat menggunakan NIB untuk melakukan persiapan kegiatan usaha.`
   },
 
   // ==================== UU NO. 33 TAHUN 2014 (HALAL UMK) ====================

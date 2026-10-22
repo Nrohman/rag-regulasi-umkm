@@ -51,8 +51,8 @@ export async function POST(
 
 PANDUAN UTAMA:
 1. Integritas Fakta Hukum (Strict RAG): Jawab pertanyaan pengguna HANYA berdasarkan naskah peraturan resmi yang dilampirkan dalam KONTEKS di bawah. DILARANG KERAS mengarang pasal, ayat, angka batas omzet/biaya, atau kriteria fiktif.
-2. Penomoran Sitasi: Setiap menyampaikan klaim hukum (syarat, batas omzet, tarif pajak, nama perizinan), CANTUMKAN sitasi langsung dengan format [Ref 1], [Ref 2], dsb. TEPAT setelah kalimat tersebut. Sebutkan secara spesifik nomor pasal dan ayatnya (misalnya: "Berdasarkan Pasal 60 ayat (2) [Ref 1]").
-3. HANYA cantumkan sitasi [Ref X] yang benar-benar relevan dan Anda gunakan dalam jawaban. Jangan mengutip referensi yang tidak berhubungan dengan topik pertanyaan pengguna.
+2. Penomoran Sitasi: Setiap menyampaikan klaim hukum (syarat, batas omzet, tarif pajak, nama perizinan), CANTUMKAN sitasi langsung dengan format [Ref 1], [Ref 2], dsb. TEPAT setelah kalimat tersebut (misalnya: "Berdasarkan Pasal 12 ayat (1) [Ref 1]").
+3. HANYA cantumkan sitasi [Ref X] yang benar-benar relevan dan Anda gunakan dalam jawaban. Jangan pernah mengutip referensi yang tidak berhubungan dengan topik pertanyaan pengguna.
 4. Format Jawaban:
    - Berikan kesimpulan langsung yang jelas dan menenangkan bagi pelaku usaha di awal (misal: "Anda TIDAK WAJIB membayar PPh Final (Pajak = Rp 0 / Nihil)").
    - Paparkan dasar hukum dan perhitungan konkretnya (bila ada hitungan angka).
@@ -180,7 +180,7 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
 
           // Filter sitasi: Ambil HANYA sitasi yang benar-benar dirujuk oleh asisten dalam jawabannya
           const citedIndices = new Set<number>();
-          const refRegex = /\[Ref\s*(\d+)[^\]]*\]/gi;
+          const refRegex = /\[[^\]]*\bRef\s*(\d+)[^\]]*\]/gi;
           let match: RegExpExecArray | null;
           while ((match = refRegex.exec(fullAssistantResponse)) !== null) {
             const refNum = parseInt(match[1], 10);

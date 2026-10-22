@@ -155,6 +155,7 @@ export default function ChatArea() {
                   const data = JSON.parse(trimmed.slice(6));
                   if (data.type === "citations") {
                     citationsList = data.citations;
+                    updateStreamingMessage("", citationsList);
                   } else if (data.type === "token") {
                     updateStreamingMessage(data.token, citationsList);
                   }
@@ -172,6 +173,7 @@ export default function ChatArea() {
             const data = JSON.parse(sseBuffer.trim().slice(6));
             if (data.type === "citations") {
               citationsList = data.citations;
+              updateStreamingMessage("", citationsList);
             } else if (data.type === "token") {
               updateStreamingMessage(data.token, citationsList);
             }
@@ -334,7 +336,7 @@ export default function ChatArea() {
                           },
                         }}
                       >
-                        {msg.content.replace(/\[Ref\s*(\d+)[^\]]*\]/g, "[$&](#ref-$1)")}
+                        {msg.content.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)")}
                       </ReactMarkdown>
 
                       {/* Render Citations if available */}

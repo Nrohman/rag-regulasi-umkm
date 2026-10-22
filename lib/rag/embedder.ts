@@ -1,3 +1,7 @@
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
 /**
  * Embedder Module using Google Gemini
  * Generates 1536-dimensional embeddings natively compatible with our Pinecone index.

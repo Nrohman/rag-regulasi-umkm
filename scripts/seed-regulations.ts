@@ -1,3 +1,6 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { ingestCuratedChunks, LegalGranularChunk } from "../lib/rag/ingest";
 import { getPineconeIndex } from "../lib/rag/pinecone";
 

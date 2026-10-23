@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import { cn } from "@/lib/utils";
 
 const QUICK_PROMPTS = [
@@ -47,22 +49,31 @@ const QUICK_PROMPTS = [
 ];
 
 /**
- * Membersihkan sintaks LaTeX/math yang tidak sengaja ter-generate ($$, \text{}, dll)
- * dan memformat sitasi [Ref X] menjadi link interaktif.
+ * Merapikan sintaks equation matematika KaTeX dan memformat sitasi [Ref X] menjadi link interaktif.
  */
 function cleanAndFormatContent(content: string): string {
   if (!content) return "";
 
-  // 1. Bersihkan kode LaTeX/KaTeX seperti $$ \text{...} $$, \text{...}, \times
-  const cleaned = content
-    .replace(/\$\$(?:\\text\{)?([\s\S]*?)\}?\$\$/g, "$1")
-    .replace(/\$(?:\\text\{)?([\s\S]*?)\}\$/g, "$1")
-    .replace(/\\text\{([^}]+)\}/g, "$1")
-    .replace(/\\times/g, "×")
-    .replace(/\$\$/g, "");
+  let text = content;
 
-  // 2. Format link sitasi [Ref X]
-  return cleaned.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)");
+  // 1. Perbaiki typo umum koma desimal LaTeX seperti 0{,5% menjadi 0{,}5%
+  text = text.replace(/0\{,5%/g, "0{,}5%");
+
+  // 2. Perbaiki kurung kurawal unclosed seperti \mathbf{Rp0 (Nihil) -> \mathbf{Rp0 (Nihil)}
+  text = text.replace(/\\mathbf\{([^\}\n\)]+)(?=\)|\n|$)/g, "\\mathbf{$1}");
+  text = text.replace(/\\text\{([^\}\n\)]+)(?=\)|\n|$)/g, "\\text{$1}");
+
+  // 3. Jika ada baris dengan ekspresi rumus yang belum dibungkus $$, otomatis bungkus agar KaTeX me-render rapi
+  text = text.replace(/(?:\n|^)([^\n\$]*?(?:0\{,5%|0\{,\}5%|\\times|\\mathbf|\\frac)[^\n\$]*?)(?=\n|$)/g, (match, formula) => {
+    const trimmed = formula.trim();
+    if (trimmed && !trimmed.startsWith("$$") && !trimmed.startsWith("$")) {
+      return `\n\n$$ ${trimmed} $$\n\n`;
+    }
+    return match;
+  });
+
+  // 4. Format link sitasi [Ref X]
+  return text.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)");
 }
 
 export default function ChatArea() {
@@ -317,7 +328,8 @@ export default function ChatArea() {
                   ) : (
                     <div className="prose dark:prose-invert prose-sm max-w-none space-y-2">
                       <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        rehypePlugins={[rehypeKatex]}
                         components={{
                           a: ({ href, children }) => {
                             const match = href?.match(/^#ref-(\d+)$/);

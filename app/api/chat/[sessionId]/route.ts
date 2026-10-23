@@ -84,25 +84,41 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
       ],
     });
 
-    // 6. Panggil Gemini Streaming API via SSE dengan konfigurasi deterministik cepat
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${apiKey}`;
+    // 6. Panggil Gemini Streaming API via SSE dengan fallback cerdas antar model
+    const candidateModels = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-2.5-flash"];
+    let geminiResponse: Response | null = null;
+    let lastError = "";
 
-    const geminiResponse = await fetch(geminiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents,
-        generationConfig: {
-          temperature: 0.1,
-          topP: 0.95,
-          maxOutputTokens: 2048,
-        },
-      }),
-    });
+    for (const model of candidateModels) {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
+      try {
+        const res = await fetch(geminiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents,
+            generationConfig: {
+              temperature: 0.1,
+              topP: 0.95,
+              maxOutputTokens: 2048,
+            },
+          }),
+        });
 
-    if (!geminiResponse.ok) {
-      const errText = await geminiResponse.text();
-      throw new Error(`Gemini API Error (${geminiResponse.status}): ${errText}`);
+        if (res.ok) {
+          geminiResponse = res;
+          break;
+        } else {
+          lastError = await res.text();
+          console.warn(`Model ${model} gagal (${res.status}), mencoba model alternatif...`);
+        }
+      } catch (err: any) {
+        lastError = err.message;
+      }
+    }
+
+    if (!geminiResponse) {
+      throw new Error(`Semua model Gemini gagal dihubungi: ${lastError}`);
     }
 
     const geminiReader = geminiResponse.body?.getReader();

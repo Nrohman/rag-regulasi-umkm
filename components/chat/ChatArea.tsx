@@ -49,31 +49,29 @@ const QUICK_PROMPTS = [
 ];
 
 /**
- * Merapikan sintaks equation matematika KaTeX dan memformat sitasi [Ref X] menjadi link interaktif.
+ * Membersihkan residu kode LaTeX (\text, \mathbf, $$, dll) menjadi teks Markdown bersih
+ * dan memformat sitasi [Ref X] menjadi link interaktif resmi.
  */
 function cleanAndFormatContent(content: string): string {
   if (!content) return "";
 
-  let text = content;
+  let s = content;
 
-  // 1. Perbaiki typo umum koma desimal LaTeX seperti 0{,5% menjadi 0{,}5%
-  text = text.replace(/0\{,5%/g, "0{,}5%");
+  // 1. Bersihkan seluruh residu sintaks LaTeX agar tidak muncul teks merah atau backslash
+  s = s.replace(/\\mathbf\{([^}]*)\}/g, "**$1**");
+  s = s.replace(/\\text\{([^}]*)\}/g, "$1");
+  s = s.replace(/\\times/g, "×");
+  s = s.replace(/\\%/g, "%");
+  s = s.replace(/\{,\}/g, ",");
+  s = s.replace(/0\{,5%/g, "0,5%");
+  s = s.replace(/\$\$/g, "");
+  s = s.replace(/\$/g, "");
+  s = s.replace(/\\mathbf/g, "");
+  s = s.replace(/\\text/g, "");
+  s = s.replace(/[\{\}]/g, "");
 
-  // 2. Perbaiki kurung kurawal unclosed seperti \mathbf{Rp0 (Nihil) -> \mathbf{Rp0 (Nihil)}
-  text = text.replace(/\\mathbf\{([^\}\n\)]+)(?=\)|\n|$)/g, "\\mathbf{$1}");
-  text = text.replace(/\\text\{([^\}\n\)]+)(?=\)|\n|$)/g, "\\text{$1}");
-
-  // 3. Jika ada baris dengan ekspresi rumus yang belum dibungkus $$, otomatis bungkus agar KaTeX me-render rapi
-  text = text.replace(/(?:\n|^)([^\n\$]*?(?:0\{,5%|0\{,\}5%|\\times|\\mathbf|\\frac)[^\n\$]*?)(?=\n|$)/g, (match, formula) => {
-    const trimmed = formula.trim();
-    if (trimmed && !trimmed.startsWith("$$") && !trimmed.startsWith("$")) {
-      return `\n\n$$ ${trimmed} $$\n\n`;
-    }
-    return match;
-  });
-
-  // 4. Format link sitasi [Ref X]
-  return text.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)");
+  // 2. Format link sitasi [Ref X]
+  return s.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)");
 }
 
 export default function ChatArea() {

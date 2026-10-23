@@ -68,10 +68,15 @@ function cleanAndFormatContent(content: string): string {
   s = s.replace(/\$/g, "");
   s = s.replace(/\\mathbf/g, "");
   s = s.replace(/\\text/g, "");
-  s = s.replace(/[\{\}]/g, "");
+  s = s.replace(/\\\[/g, "[");
+  s = s.replace(/\\\]/g, "]");
+  s = s.replace(/\{([^{}]*)\}/g, "$1");
 
-  // 2. Format link sitasi [Ref X]
-  return s.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)");
+  // Rapikan sitasi ganda: [[Ref 1]] -> [Ref 1]
+  s = s.replace(/\[\s*\[\s*(Ref\s*\d+)\s*\]\s*\]/gi, "[$1]");
+
+  // 2. Format link sitasi [Ref X] yang belum berbentuk link Markdown:
+  return s.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\](?!\()/gi, "[$1](#ref-$2)");
 }
 
 export default function ChatArea() {
@@ -353,6 +358,27 @@ export default function ChatArea() {
                                   </a>
                                 );
                               }
+                            }
+
+                            const isLegalSource =
+                              href?.includes("peraturan.bpk.go.id") ||
+                              href?.includes("jdih") ||
+                              /Ref\s*\d+/i.test(String(children));
+
+                            if (isLegalSource) {
+                              return (
+                                <a
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 mx-1 px-1.5 py-0.5 text-[11px] font-semibold text-blue-700 dark:text-blue-300 bg-blue-100/90 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-800 rounded border border-blue-300 dark:border-blue-700/60 transition-all cursor-pointer align-baseline group"
+                                  title="Buka Dokumen Resmi Pemerintah (JDIH BPK RI)"
+                                >
+                                  <Scale className="w-3 h-3 text-blue-600 dark:text-blue-400 shrink-0" />
+                                  <span>{children}</span>
+                                  <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                </a>
+                              );
                             }
 
                             return (

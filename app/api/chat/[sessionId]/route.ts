@@ -88,7 +88,13 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
     });
 
     // 6. Panggil Gemini Streaming API via SSE dengan fallback cerdas antar model
-    const candidateModels = ["gemini-flash-latest", "gemini-3.5-flash", "gemini-2.5-flash"];
+    const candidateModels = [
+      "gemini-flash-lite-latest",
+      "gemini-2.5-flash-lite",
+      "gemini-3.5-flash",
+      "gemini-flash-latest",
+      "gemini-2.5-flash",
+    ];
     let geminiResponse: Response | null = null;
     let lastError = "";
 
@@ -103,7 +109,7 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
             generationConfig: {
               temperature: 0.1,
               topP: 0.95,
-              maxOutputTokens: 2048,
+              maxOutputTokens: 8192,
             },
           }),
         });
@@ -164,7 +170,8 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
                 try {
                   const json = JSON.parse(trimmed.slice(6));
                   const candidate = json.candidates?.[0];
-                  const text = candidate?.content?.parts?.[0]?.text;
+                  const parts = candidate?.content?.parts || [];
+                  const text = parts.map((p: any) => p.text || "").join("");
 
                   if (text) {
                     fullAssistantResponse += text;
@@ -186,7 +193,8 @@ ${retrieval.contextText || "Tidak ada pasal hukum spesifik yang ditemukan."}`;
             try {
               const json = JSON.parse(buffer.trim().slice(6));
               const candidate = json.candidates?.[0];
-              const text = candidate?.content?.parts?.[0]?.text;
+              const parts = candidate?.content?.parts || [];
+              const text = parts.map((p: any) => p.text || "").join("");
               if (text) {
                 fullAssistantResponse += text;
                 const tokenPayload = JSON.stringify({

@@ -46,6 +46,25 @@ const QUICK_PROMPTS = [
   },
 ];
 
+/**
+ * Membersihkan sintaks LaTeX/math yang tidak sengaja ter-generate ($$, \text{}, dll)
+ * dan memformat sitasi [Ref X] menjadi link interaktif.
+ */
+function cleanAndFormatContent(content: string): string {
+  if (!content) return "";
+
+  // 1. Bersihkan kode LaTeX/KaTeX seperti $$ \text{...} $$, \text{...}, \times
+  const cleaned = content
+    .replace(/\$\$(?:\\text\{)?([\s\S]*?)\}?\$\$/g, "$1")
+    .replace(/\$(?:\\text\{)?([\s\S]*?)\}\$/g, "$1")
+    .replace(/\\text\{([^}]+)\}/g, "$1")
+    .replace(/\\times/g, "×")
+    .replace(/\$\$/g, "");
+
+  // 2. Format link sitasi [Ref X]
+  return cleaned.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)");
+}
+
 export default function ChatArea() {
   const router = useRouter();
   const {
@@ -339,7 +358,7 @@ export default function ChatArea() {
                           },
                         }}
                       >
-                        {msg.content.replace(/\[([^\]]*\bRef\s*(\d+)[^\]]*)\]/gi, "[$&](#ref-$2)")}
+                        {cleanAndFormatContent(msg.content)}
                       </ReactMarkdown>
 
                       {/* Daftar Pustaka / Rujukan Hukum Terverifikasi */}
